@@ -2,6 +2,7 @@
 tmp
 temp
 earth
+.venv
 
 *.blend1
 *.stl
