@@ -32,13 +32,16 @@ def updateReadme():
                 folder_name = os.path.basename(repo_root)
             else:
                 folder_name = os.path.basename(root)
+              # Find render-output images
+            render_output_images = [f for f in files 
+                                   if f.lower().startswith('render-output') and 
+                                   f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp'))]
             
             # Store information about this folder
             blend_folders[rel_path] = {
                 'name': folder_name,
                 'blend_files': blend_files,
-                # 'images': [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
-                'images': [],
+                'render_output_images': render_output_images,
             }
     
     # Generate the README content
@@ -47,16 +50,15 @@ def updateReadme():
     # Add sections for each folder with .blend files
     for rel_path, folder_info in sorted(blend_folders.items()):
         readme_content += f"### {folder_info['name']}\n\n"
-        
-        # Add links to blend files
+          # Add links to blend files
         for blend_file in sorted(folder_info['blend_files']):
             file_path = os.path.join(rel_path, blend_file).replace('\\', '/')
             readme_content += f"- [{blend_file}]({file_path})\n"
         
-        # Add images with adjusted size
-        if folder_info['images']:
-            readme_content += "\n"
-            for image in sorted(folder_info['images']):
+        # Add render-output images with max height 200
+        if folder_info['render_output_images']:
+            readme_content += "\n**Render Output:**\n\n"
+            for image in sorted(folder_info['render_output_images']):
                 image_path = os.path.join(rel_path, image).replace('\\', '/')
                 readme_content += f"<img src=\"{image_path}\" alt=\"{image}\" height=\"200\">\n"
         
